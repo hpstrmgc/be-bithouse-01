@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .profile-column {
+            display: flex;
+            flex-direction: column;
+            width: 45%;
+        }
+
+        .profile-column div {
+            margin-bottom: 10px;
+        }
+
+        .profile-column label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .profile-column input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .profile-column input[readonly] {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-container">
+        <!-- Foto Profil -->
+        <img src="https://via.placeholder.com/150" alt="Profile Picture" class="profile-picture">
+
+        <!-- Detail Profil -->
+        <div class="profile-details">
+            <!-- Kolom 1 -->
+            <div class="profile-column">
+                <h1>{{ employee.first_name }} {{ employee.last_name }}</h1>
+                <div>
+                    <label>ID Employee</label>
+                    <input type="text" value="{{ employee.employee_id }}" readonly>
+                </div>
+                <div>
+                    <label>Department</label>
+                    <input type="text" value="{{ employee.departement }}" readonly>
+                </div>
+                <div>
+                    <label>Job Position</label>
+                    <input type="text" value="{{ employee.job_position }}" readonly>
+                </div>
+                <div>
+                    <label>Join Date</label>
+                    <input type="text" value="{{ employee.join_date }}" readonly>
+                </div>
+                <div>
+                    <label>Day Payment</label>
+                    <input type="text" value="{{ employee.day_payment }}" readonly>
+                </div>
+            </div>
+
+            <!-- Kolom 2 -->
+            <div class="profile-column">
+                <div>
+                    <label>Job Level</label>
+                    <input type="text" value="{{ employee.job_level }}" readonly>
+                </div>
+                <div>
+                    <label>Employment Status</label>
+                    <input type="text" value="{{ employee.employment_status }}" readonly>
+                </div>
+                <div>
+                    <label>End Date</label>
+                    <input type="text" value="{{ employee.end_date }}" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabel Sertifikasi -->
+    <h2>Certifications</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Certification Name</th>
+                <th>Certification Number</th>
+                <th>Date Issued</th>
+                <th>Validity Period</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cert in certifications %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ cert.name }}</td>
+                <td>{{ cert.number }}</td>
+                <td>{{ cert.date_issued }}</td>
+                <td>{{ cert.verify_period }}</td>
+                <td>{{ cert.description }}</td>
+                <td>
+                    {% if cert.file %}
+                    <a href="{{ cert.file.url }}" download>Download</a>
+                    {% else %}
+                    <span>No File</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Tombol untuk Membuka Modal -->
+    <button id="editButton">Edit Employee</button>
+
+    <!-- Modal untuk Formulir Edit -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Employee</h2>
+                <span class="close" id="closeModal">&times;</span>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript untuk Modal
+        const modal = document.getElementById('editModal');
+        const editButton = document.getElementById('editButton');
+        const closeModal = document.getElementById('closeModal');
+
+        editButton.onclick = function () {
+            modal.style.display = 'flex';
+        };
+
+        closeModal.onclick = function () {
+            modal.style.display = 'none';
+        };
+
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+
+</html>
