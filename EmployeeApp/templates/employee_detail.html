@@ -207,7 +207,7 @@
                     {% if cert.file %}
                     <a href="{{ cert.file.url }}" download>Download</a>
                     {% else %}
-                    <span>No File</span>
+                    <button class="uploadButton" data-cert-id="{{ cert.certification_id }}">Upload File</button>
                     {% endif %}
                 </td>
             </tr>
@@ -215,17 +215,33 @@
         </tbody>
     </table>
 
-    <!-- Tombol untuk Membuka Modal -->
-    <button id="editButton">Edit Employee</button>
+    <!-- Modal untuk Upload File -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Upload Certification File</h2>
+                <span class="close" id="closeUploadModal">&times;</span>
+            </div>
+            <form method="post" action="{% url 'upload_certification' %}" enctype="multipart/form-data" id="uploadForm">
+                {% csrf_token %}
+                <input type="hidden" name="certification_id" id="certificationId">
+                <div>
+                    <label for="file">Choose a .docx file:</label>
+                    <input type="file" name="file" id="file" accept=".docx" required>
+                </div>
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+    </div>
 
-    <!-- Modal untuk Formulir Edit -->
+    <button id="editButton">Edit Employee</button>
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Edit Employee</h2>
-                <span class="close" id="closeModal">&times;</span>
+                <span class="close" id="closeEditModal">&times;</span>
             </div>
-            <form method="post">
+            <form method="post" action="{% url 'employee_detail' employee.employee_id %}">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit">Save</button>
@@ -234,22 +250,45 @@
     </div>
 
     <script>
-        // JavaScript untuk Modal
-        const modal = document.getElementById('editModal');
-        const editButton = document.getElementById('editButton');
-        const closeModal = document.getElementById('closeModal');
+        // JavaScript untuk Modal Upload
+        const uploadModal = document.getElementById('uploadModal');
+        const uploadButtons = document.querySelectorAll('.uploadButton');
+        const closeUploadModal = document.getElementById('closeUploadModal');
+        const certificationIdInput = document.getElementById('certificationId');
 
-        editButton.onclick = function () {
-            modal.style.display = 'flex';
-        };
+        uploadButtons.forEach(button => {
+            button.onclick = function () {
+                const certId = this.getAttribute('data-cert-id');
+                certificationIdInput.value = certId; // Set certification ID in hidden input
+                uploadModal.style.display = 'flex';
+            };
+        });
 
-        closeModal.onclick = function () {
-            modal.style.display = 'none';
+        closeUploadModal.onclick = function () {
+            uploadModal.style.display = 'none';
         };
 
         window.onclick = function (event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
+            if (event.target === uploadModal) {
+                uploadModal.style.display = 'none';
+            }
+        };
+        //edit data
+        const editModal = document.getElementById('editModal');
+        const editButton = document.getElementById('editButton');
+        const closeEditModal = document.getElementById('closeEditModal');
+
+        editButton.onclick = function () {
+            editModal.style.display = 'flex';
+        };
+
+        closeEditModal.onclick = function () {
+            editModal.style.display = 'none';
+        };
+
+        window.onclick = function (event) {
+            if (event.target === editModal) {
+                editModal.style.display = 'none';
             }
         };
     </script>

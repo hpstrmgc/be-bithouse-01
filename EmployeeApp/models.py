@@ -14,21 +14,18 @@ class Employee(models.Model):
     end_date = models.DateField(null=True, blank=True)
     day_payment = models.DecimalField(max_digits=10, decimal_places=0)
 
-# selanjutnya bagaimana cara menambahkan multi table
-# di certification harus terdapat no, nama, number, date issued, verify period, description, action: unggah (jika belum ada), view/download (jika sudah ada)
-
 class Departement(models.Model):
     departement_name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.departement_name  # Tampilkan nama departemen
+        return self.departement_name
 
 class Certification(models.Model):
     certification_id = models.AutoField(primary_key=True)
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Relasi ke Employee
-    name = models.CharField(max_length=100)  # Nama sertifikasi
-    number = models.CharField(max_length=50)  # Nomor sertifikasi
-    date_issued = models.DateField()  # Tanggal diterbitkan
-    verify_period = models.CharField(max_length=50)  # Periode validitas
-    description = models.TextField(null=True, blank=True)  # Deskripsi sertifikasi
-    file = models.FileField(upload_to='certifications/', null=True, blank=True)  # File sertifikasi
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    number = models.CharField(max_length=50)
+    date_issued = models.DateField() 
+    verify_period = models.CharField(max_length=50)  
+    description = models.TextField(null=True, blank=True) 
+    file = models.FileField(upload_to='certifications/', null=True, blank=True) 
