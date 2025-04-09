@@ -180,6 +180,42 @@
         </div>
     </div>
 
+    <!-- Modal untuk add certifications-->
+    <button id="addCertificationButton">Tambah Sertifikasi</button>
+    <div id="addCertificationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tambah Sertifikasi</h2>
+                <span class="close" id="closeAddCertificationModal">&times;</span>
+            </div>
+            <form method="post" action="{% url 'add_certification' %}">
+                {% csrf_token %}
+                <input type="hidden" name="employee_id" value="{{ employee.employee_id }}">
+                <div>
+                    <label for="name">Certification Name:</label>
+                    <input type="text" name="name" id="name" required>
+                </div>
+                <div>
+                    <label for="number">Certification Number:</label>
+                    <input type="text" name="number" id="number" required>
+                </div>
+                <div>
+                    <label for="date_issued">Date Issued:</label>
+                    <input type="date" name="date_issued" id="date_issued" required>
+                </div>
+                <div>
+                    <label for="verify_period">Validity Period:</label>
+                    <input type="text" name="verify_period" id="verify_period" required>
+                </div>
+                <div>
+                    <label for="description">Description:</label>
+                    <textarea name="description" id="description"></textarea>
+                </div>
+                <button type="submit">Tambah</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Tabel Sertifikasi -->
     <h2>Certifications</h2>
     <table>
@@ -289,6 +325,25 @@
         window.onclick = function (event) {
             if (event.target === editModal) {
                 editModal.style.display = 'none';
+            }
+        };
+
+        // JavaScript untuk Modal Tambah Sertifikasi
+        const addCertificationModal = document.getElementById('addCertificationModal');
+        const addCertificationButton = document.getElementById('addCertificationButton');
+        const closeAddCertificationModal = document.getElementById('closeAddCertificationModal');
+
+        addCertificationButton.onclick = function () {
+            addCertificationModal.style.display = 'flex';
+        };
+
+        closeAddCertificationModal.onclick = function () {
+            addCertificationModal.style.display = 'none';
+        };
+
+        window.onclick = function (event) {
+            if (event.target === addCertificationModal) {
+                addCertificationModal.style.display = 'none';
             }
         };
     </script>

@@ -21,11 +21,11 @@ class Departement(models.Model):
         return self.departement_name
 
 class Certification(models.Model):
-    certification_id = models.AutoField(primary_key=True)
+    certification_id = models.AutoField(primary_key=True)  # Auto-increment primary key
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     number = models.CharField(max_length=50)
-    date_issued = models.DateField() 
-    verify_period = models.CharField(max_length=50)  
-    description = models.TextField(null=True, blank=True) 
-    file = models.FileField(upload_to='certifications/', null=True, blank=True) 
+    date_issued = models.DateField()
+    verify_period = models.CharField(max_length=50)
+    description = models.TextField(null=True, blank=True)
+    file = models.FileField(upload_to='certifications/', null=True, blank=True)
