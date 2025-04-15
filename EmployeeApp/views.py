@@ -4,6 +4,7 @@ from .models import Employee, Certification
 from .forms import EmployeeForm, CertificationForm
 from django.shortcuts import redirect
 from .models import Certification, Employee
+import os
 
 def employee_detail(request, employee_id):
     employee = get_object_or_404(Employee, employee_id=employee_id)
@@ -57,3 +58,14 @@ def add_certification(request):
         )
         return redirect('employee_detail', employee_id=employee_id)
     return HttpResponse("Invalid request method.", status=405)
+
+def delete_certification(request, cert_id):
+    certification = get_object_or_404(Certification, certification_id=cert_id)
+    employee_id = certification.employee.employee_id
+    if certification.file and os.path.isfile(certification.file.path):
+        os.remove(certification.file.path)
+    certification.delete()
+    return redirect('employee_detail', employee_id=employee_id)
+
+def index(request):
+    return HttpResponse("Welcome to the EmployeeApp!")

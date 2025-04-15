@@ -16,8 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import HttpResponse
+from django.conf import settings
+from django.conf.urls.static import static
+
+def home(request):
+    return HttpResponse("masuk ke server")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('employeeapp/', include('EmployeeApp.urls')),  # Tambahkan ini
-]
+    path('employeeapp/', include('EmployeeApp.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
