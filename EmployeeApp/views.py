@@ -28,18 +28,27 @@ def employee_detail(request, employee_id):
 def upload_certification(request):
     if request.method == 'POST':
         cert_id = request.POST.get('certification_id')
+        print(f"Received certification_id: {cert_id}")  # Log untuk memastikan certification_id diterima
 
         if not cert_id:
+            print("Certification ID is missing.")  # Log jika certification_id tidak ada
             return HttpResponse("Certification ID is missing.", status=400)
 
         certification = get_object_or_404(Certification, certification_id=cert_id)
+        print(f"Certification object found: {certification}")  # Log untuk memastikan objek ditemukan
+
         form = CertificationForm(request.POST, request.FILES, instance=certification)
+        print(f"Form data: {form.data}")  # Log untuk melihat data formulir
+        print(f"Form files: {form.files}")  # Log untuk melihat file yang diunggah
 
         if form.is_valid():
             form.save()
+            print(f"File saved at: {certification.file.path}")  # Log lokasi file yang disimpan
             return redirect('employee_detail', employee_id=certification.employee.employee_id)
         else:
+            print("Form is invalid.")  # Log jika formulir tidak valid
             return HttpResponse("Invalid file type. Only .docx files are allowed.", status=400)
+    print("Invalid request method.")  # Log jika metode request bukan POST
     return HttpResponse("Invalid request method.", status=405)
 
 def add_certification(request):
