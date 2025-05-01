@@ -1,7 +1,7 @@
 # Be-Bithouse-01
 
 ## Overview
-Be-Bithouse-01 is a Django application that uses PostgreSQL as its database. The project includes features such as employee management and certification tracking.
+Be-Bithouse-01 is a simple Django application that uses PostgreSQL as its database. The project includes features such as employee management and certification tracking.
 
 ---
 
