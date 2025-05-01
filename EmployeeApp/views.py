@@ -1,14 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from .models import Employee, Certification
+from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.views.decorators.http import require_POST
+from .models import Employee, Certification, Departement
 from .forms import EmployeeForm, CertificationForm
-from django.shortcuts import redirect
-from .models import Certification, Employee
 import os
 
 def employee_detail(request, employee_id):
     employee = get_object_or_404(Employee, employee_id=employee_id)
-    
+    departments = Departement.objects.all()
+
     certifications = Certification.objects.filter(employee=employee)
     
     if request.method == 'POST':
@@ -23,8 +25,39 @@ def employee_detail(request, employee_id):
         'employee': employee,
         'certifications': certifications,
         'form': form,
+        'departments': departments,
     }
     return render(request, 'employee_detail.html', context)
+
+@require_POST
+def upload_profile_photo(request, employee_id):
+    employee = get_object_or_404(Employee, employee_id=employee_id)
+
+    photo = request.FILES.get('profile_picture')
+    if not photo:
+        messages.error(request, "No file selected.")
+        return redirect('employee_detail', employee_id=employee_id)
+
+    if photo.content_type not in ['image/jpeg', 'image/png']:
+        messages.error(request, "Only JPEG and PNG images are allowed.")
+        return redirect('employee_detail', employee_id=employee_id)
+
+    if photo.size > 2 * 1024 * 1024:  # 2MB
+        messages.error(request, "The image file size must not exceed 2MB.")
+        return redirect('employee_detail', employee_id=employee_id)
+
+    employee.profile_picture = photo
+    employee.save()
+    messages.success(request, "Profile photo uploaded successfully.")
+    return redirect('employee_detail', employee_id=employee_id)
+
+def delete_profile_picture(request, employee_id):
+    employee = get_object_or_404(Employee, employee_id=employee_id)
+    if employee.profile_picture and os.path.isfile(employee.profile_picture.path):
+        os.remove(employee.profile_picture.path)
+        employee.profile_picture = None
+        employee.save()
+    return redirect('employee_detail', employee_id=employee_id)
 
 def upload_certification(request):
     if request.method == 'POST':

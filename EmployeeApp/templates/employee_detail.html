@@ -7,28 +7,37 @@
     <title>Employee Detail</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: 'Plus Jakarta Sans';
-            src: url('/static/fonts/PlusJakartaSans-Regular.ttf') format('truetype');
-            font-weight: 400;
-        }
-
-        @font-face {
-            font-family: 'Plus Jakarta Sans';
-            src: url('/static/fonts/PlusJakartaSans-Bold.ttf') format('truetype');
-            font-weight: 700;
-        }
-
+        /* Font declarations */
         @font-face {
             font-family: 'Inter';
             src: url('/static/fonts/Inter-Regular.ttf') format('truetype');
-            font-weight: 400;
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
         }
 
         @font-face {
             font-family: 'Inter';
             src: url('/static/fonts/Inter-Bold.ttf') format('truetype');
-            font-weight: 700;
+            font-weight: bold;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Plus Jakarta Sans';
+            src: url('/static/fonts/PlusJakartaSans-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Plus Jakarta Sans';
+            src: url('/static/fonts/PlusJakartaSans-Bold.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+            font-display: swap;
         }
 
         :root {
@@ -39,6 +48,8 @@
             --light-gray: #ecf0f1;
             --border-radius: 8px;
             --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            --heading-font: 'Plus Jakarta Sans', sans-serif;
+            --body-font: 'Inter', sans-serif;
         }
 
         * {
@@ -48,7 +59,7 @@
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--body-font);
             line-height: 1.6;
             color: var(--text-color);
             background-color: #f8f9fa;
@@ -56,20 +67,16 @@
             padding: 0;
         }
 
+        /* Apply heading font to all headers */
         h1,
         h2,
         h3,
         h4,
         h5,
-        h6 {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 600;
-        }
-
-        button,
-        input,
-        textarea {
-            font-family: 'Inter', sans-serif;
+        h6,
+        .card-header,
+        .modal-header h2 {
+            font-family: var(--heading-font);
         }
 
         .container {
@@ -110,6 +117,7 @@
             position: relative;
             width: 180px;
             height: 180px;
+            margin-bottom: 10px;
         }
 
         .profile-picture {
@@ -123,7 +131,44 @@
         }
 
         .profile-picture:hover {
-            transform: scale(1.05);
+            transform: scale(1.02);
+        }
+
+        .profile-picture-actions {
+            position: absolute;
+            bottom: 10px;
+            right: 0;
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-icon-danger {
+            background-color: #e74c3c;
+        }
+
+        .btn-icon-danger:hover {
+            background-color: #c0392b;
         }
 
         .profile-details {
@@ -143,6 +188,7 @@
             font-weight: 600;
             margin-bottom: 20px;
             color: var(--primary-color);
+            font-family: var(--heading-font);
         }
 
         .field-group {
@@ -165,6 +211,7 @@
             background-color: var(--light-gray);
             color: var(--text-color);
             font-size: 15px;
+            font-family: var(--body-font);
         }
 
         .btn {
@@ -181,6 +228,7 @@
             transition: all 0.3s ease;
             margin-right: 10px;
             margin-bottom: 10px;
+            font-family: var(--body-font);
         }
 
         .btn:hover {
@@ -227,6 +275,7 @@
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--box-shadow);
+            font-family: var(--body-font);
         }
 
         thead th {
@@ -235,6 +284,7 @@
             padding: 15px;
             text-align: left;
             font-weight: 500;
+            font-family: var(--heading-font);
         }
 
         tbody tr:nth-child(even) {
@@ -267,6 +317,7 @@
             cursor: pointer;
             border: none;
             transition: all 0.2s ease;
+            font-family: var(--body-font);
         }
 
         .action-btn-download {
@@ -306,12 +357,13 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.4);
             justify-content: center;
             align-items: center;
             animation: fadeIn 0.3s ease;
         }
 
+        /* Modal Animations */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -320,16 +372,6 @@
             to {
                 opacity: 1;
             }
-        }
-
-        .modal-content {
-            background-color: #fff;
-            padding: 25px;
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            animation: slideIn 0.3s ease;
         }
 
         @keyframes slideIn {
@@ -344,52 +386,74 @@
             }
         }
 
+        /* Modal Content Styling */
+        .modal-content {
+            background: linear-gradient(135deg, #f9f9f9, #ecf0f1);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            animation: slideIn 0.3s ease;
+            font-family: var(--body-font);
+        }
+
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #ddd;
             padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
         }
 
         .modal-header h2 {
-            margin: 0;
+            font-size: 26px;
+            font-weight: 600;
             color: var(--primary-color);
-            font-size: 22px;
+            margin: 0;
+            font-family: var(--heading-font);
         }
 
         .close {
-            font-size: 24px;
+            font-size: 30px;
             font-weight: bold;
             cursor: pointer;
             color: #aaa;
-            transition: color 0.2s;
+            transition: color 0.2s ease;
         }
 
         .close:hover {
             color: var(--primary-color);
         }
 
-        /* Form styles */
+        /* Form Styles */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
             font-weight: 500;
             color: #555;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: var(--body-font);
         }
 
         .form-control {
             width: 100%;
-            padding: 10px 12px;
+            padding: 12px 15px;
             border: 1px solid #ddd;
             border-radius: var(--border-radius);
-            font-size: 15px;
-            transition: border-color 0.3s;
+            background-color: #f9f9f9;
+            font-size: 16px;
+            color: #333;
+            transition: border-color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            outline: none;
+            font-family: var(--body-font);
         }
 
         .form-control:focus {
@@ -402,10 +466,59 @@
             min-height: 100px;
         }
 
+        /* Button Styling */
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .modal-footer .btn {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: var(--body-font);
+        }
+
+        .modal-footer .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .modal-footer .btn:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+
+        .modal-footer .btn-loading {
+            background-color: #f39c12;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+            font-family: var(--body-font);
+        }
+
+        .help-text {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+            font-family: var(--body-font);
+        }
+
         .empty-state {
             text-align: center;
             padding: 40px 20px;
             color: #777;
+            font-family: var(--body-font);
         }
 
         .empty-state i {
@@ -420,6 +533,7 @@
             border-radius: 4px;
             font-size: 12px;
             font-weight: 500;
+            font-family: var(--body-font);
         }
 
         .badge-active {
@@ -430,6 +544,50 @@
         .badge-inactive {
             background-color: #e74c3c;
             color: white;
+        }
+
+        input[type="date"] {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            background-color: #f9f9f9;
+            font-size: 16px;
+            color: #333;
+            transition: border-color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-family: var(--body-font);
+        }
+
+        input[type="date"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Textarea Styling */
+        textarea.form-control {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            color: #333;
+            background-color: #f9f9f9;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s ease;
+            font-family: var(--body-font);
+        }
+
+        textarea.form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Error message styling */
+        .form-group .error-message {
+            font-size: 14px;
+            color: #e74c3c;
+            margin-top: 5px;
+            font-family: var(--body-font);
         }
 
         /* Responsive styles */
@@ -469,7 +627,23 @@
                 <div class="profile-container">
                     <!-- Profile Picture -->
                     <div class="profile-picture-container">
-                        <img src="https://via.placeholder.com/180" alt="Profile Picture" class="profile-picture">
+                        {% if employee.profile_picture %}
+                        <img src="{{ employee.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+                        {% else %}
+                        <img src="/static/images/default-profile.jpg" alt="Default Profile Picture"
+                            class="profile-picture">
+                        {% endif %}
+
+                        <div class="profile-picture-actions">
+                            <button id="changePhotoBtn" class="btn-icon" title="Change Photo">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            {% if employee.profile_picture %}
+                            <button id="deletePhotoBtn" class="btn-icon btn-icon-danger" title="Delete Photo">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            {% endif %}
+                        </div>
                     </div>
 
                     <!-- Employee Details -->
@@ -490,6 +664,11 @@
                             <div class="field-group">
                                 <label class="field-label">Job Position</label>
                                 <input type="text" class="field-value" value="{{ employee.job_position }}" readonly>
+                            </div>
+
+                            <div class="field-group">
+                                <label class="field-label">Day Payment</label>
+                                <input type="text" class="field-value" value="{{ employee.day_payment }}" readonly>
                             </div>
                         </div>
 
@@ -663,10 +842,61 @@
             <form method="post" action="{% url 'employee_detail' employee.employee_id %}">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="btn">
+                <button type="submit" class="btn btn-accent">
                     <i class="fas fa-save"></i> Save Changes
                 </button>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal untuk Change Photo -->
+    <div id="changePhotoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-camera"></i> Change Profile Photo</h2>
+                <span class="close" id="closeChangePhotoModal">&times;</span>
+            </div>
+            <form method="post" enctype="multipart/form-data"
+                action="{% url 'upload_profile_photo' employee.employee_id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_profile_picture">Select new profile picture</label>
+                    <input type="file" name="profile_picture" id="id_profile_picture" class="form-control"
+                        accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <p class="help-text">Recommended: Square image (1:1 ratio) with minimum dimensions of 300x300
+                        pixels.</p>
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-upload"></i> Upload Photo
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal untuk Delete Photo -->
+    <div id="deletePhotoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> Delete Profile Photo</h2>
+                <span class="close" id="closeDeletePhotoModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the current profile photo? This action cannot be undone.</p>
+                <p>The profile photo will be reset to the default image.</p>
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{% url 'delete_photo' employee.employee_id %}">
+                    {% csrf_token %}
+                    <button type="button" class="btn" id="cancelDeletePhoto">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> Delete Photo
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -715,6 +945,44 @@
             addCertificationModal.style.display = 'none';
         };
 
+        // JavaScript untuk Modal Change Photo
+        const changePhotoModal = document.getElementById('changePhotoModal');
+        const changePhotoBtn = document.getElementById('changePhotoBtn');
+        const closeChangePhotoModal = document.getElementById('closeChangePhotoModal');
+
+        changePhotoBtn.onclick = function () {
+            changePhotoModal.style.display = 'flex';
+        };
+
+        closeChangePhotoModal.onclick = function () {
+            changePhotoModal.style.display = 'none';
+        };
+
+        // JavaScript untuk Modal Delete Photo
+        const deletePhotoModal = document.getElementById('deletePhotoModal');
+        const deletePhotoBtn = document.getElementById('deletePhotoBtn');
+        const closeDeletePhotoModal = document.getElementById('closeDeletePhotoModal');
+        const cancelDeletePhoto = document.getElementById('cancelDeletePhoto');
+
+        // Only initialize delete photo button if it exists
+        if (deletePhotoBtn) {
+            deletePhotoBtn.onclick = function () {
+                deletePhotoModal.style.display = 'flex';
+            };
+        }
+
+        if (closeDeletePhotoModal) {
+            closeDeletePhotoModal.onclick = function () {
+                deletePhotoModal.style.display = 'none';
+            };
+        }
+
+        if (cancelDeletePhoto) {
+            cancelDeletePhoto.onclick = function () {
+                deletePhotoModal.style.display = 'none';
+            };
+        }
+
         // Close modals when clicking outside
         window.onclick = function (event) {
             if (event.target === uploadModal) {
@@ -725,6 +993,12 @@
             }
             if (event.target === addCertificationModal) {
                 addCertificationModal.style.display = 'none';
+            }
+            if (event.target === changePhotoModal) {
+                changePhotoModal.style.display = 'none';
+            }
+            if (event.target === deletePhotoModal) {
+                deletePhotoModal.style.display = 'none';
             }
         };
     </script>

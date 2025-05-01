@@ -13,6 +13,7 @@ class Employee(models.Model):
     join_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
     day_payment = models.DecimalField(max_digits=10, decimal_places=0)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
 class Departement(models.Model):
     departement_name = models.CharField(max_length=100)
@@ -21,7 +22,7 @@ class Departement(models.Model):
         return self.departement_name
 
 def certification_upload_path(instance, filename):
-    return os.path.join('', filename)
+    return f'certifications/{filename}'
 
 class Certification(models.Model):
     certification_id = models.AutoField(primary_key=True)  # Auto-increment primary key
