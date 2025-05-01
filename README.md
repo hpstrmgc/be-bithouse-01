@@ -96,6 +96,10 @@ Below are the endpoints available in this application:
 - `POST /upload-certification/` - Upload a certification file (.docx)
 - `GET /delete-certification/<int:cert_id>/` - Delete a specific certification
 
+#### Profile Photo Endpoints
+- `POST /upload-profile-photo/<int:employee_id>/` - Upload a new profile photo for an employee
+- `POST /delete-photo/<int:employee_id>/` - Delete the current profile photo and reset to default
+
 ### Media Access
 The application also provides access to uploaded media files through the URL configured in `settings.MEDIA_URL`.
 
